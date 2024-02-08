@@ -1,0 +1,79 @@
+1) select Nome, Cognome, Età from Impiegati
+where [Età] > 29
+
+2) select Nome, Cognome, [Reddito Mensile] from Impiegati
+where [Reddito Mensile] > 800
+
+3) select Nome, Cognome from Impiegati
+where [Detrazione Fiscale] = 'True'
+
+4) select Nome, Cognome from Impiegati
+where [Detrazione Fiscale] = 'False'
+
+5) select Nome, Cognome from Impiegati
+where Cognome like 'G%'
+
+6) select COUNT(*) as [All Employees] from Impiegati
+
+7) select SUM([Reddito Mensile]) as [Total] from Impiegati
+
+8) select avg([Reddito Mensile]) as [Average] from Impiegati
+
+9) select max([Reddito Mensile]) as [Max] from Impiegati
+
+10) select min([Reddito Mensile]) as [Min] from Impiegati
+
+11) select * from Impiegati where Data_Assunzione between '01/01/2007' and '01/01/2008'
+
+12) 
+
+12-1) creata una funzione parametrica per cercare per impiego
+
+create procedure ShowEmployeesByMansion @impiego varchar(32)
+
+as
+select M.Nome, M.Cognome, I.[Tipo Impiego], M.Data_Assunzione 
+from Impiegati M inner join Impieghi I
+on M.IDImpiego = I.IDImpiego
+where I.[Tipo Impiego] = @impiego
+
+12-2) eseguire la funzione
+
+exec [dbo].[ShowEmployeesByMansion] @impiego= 'Producer'
+
+13) select AVG(Età) as [Average Age] from Impiegati
+
+create procedure AddEmployee 
+@id int,
+@name varchar(32),
+@surname varchar(32),
+@cf varchar(16),
+@age int,
+@reddito money = 0,
+@detrazione bit = false,
+@mansion int,
+@assunzione date
+as
+insert into Impiegati 
+values(@id, @name, @surname, @cf, @age, @reddito, @detrazione, @mansion, @assunzione)
+
+// per reddito e detrazione sono valori di default se non si scrive nulla
+
+15) create procedure [dbo].[ModifyEmployee]
+@employee int,
+@name varchar(32),
+@surname varchar(32),
+@cf varchar(16),
+@age int,
+@reddito money,
+@detrazione bit,
+@mansion int,
+@assunzione date
+as
+update Impiegati 
+set Cognome = @surname, Nome = @name, [Codice Fiscale] = @cf, Età = @age, [Reddito Mensile] = @reddito, [Detrazione Fiscale] = @detrazione, IDImpiego = @mansion, Data_Assunzione = @assunzione
+where IDImpiegato = @employee;
+
+16) create procedure DeleteEmployee @id int
+as
+delete from Impiegati where IDImpiegato=@id
